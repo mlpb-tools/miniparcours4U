@@ -1,0 +1,3106 @@
+<!doctype html>
+<html lang="fr">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Parcours Thématiques</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #ffffff;
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    .deco-shapes {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .deco-circle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.12;
+    }
+
+    .deco-circle-1 {
+      width: 400px;
+      height: 400px;
+      background: #FF1744;
+      top: -100px;
+      right: -100px;
+    }
+
+    .deco-circle-2 {
+      width: 300px;
+      height: 300px;
+      background: #FFD600;
+      bottom: 100px;
+      left: -80px;
+    }
+
+    .deco-circle-3 {
+      width: 200px;
+      height: 200px;
+      background: #00BFA5;
+      top: 40%;
+      right: 10%;
+    }
+
+    .deco-puzzle {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      opacity: 0.08;
+    }
+
+    .puzzle-1 {
+      top: 15%;
+      left: 5%;
+      background: #FF1744;
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+
+    .puzzle-2 {
+      bottom: 20%;
+      right: 8%;
+      background: #00BFA5;
+      border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    }
+
+    .floating-dots {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+
+    .dot-1 { background: #00BFA5; top: 25%; left: 15%; }
+    .dot-2 { background: #FFD600; top: 60%; right: 20%; }
+    .dot-3 { background: #B2DFDB; bottom: 30%; left: 25%; width: 15px; height: 15px; }
+    .dot-4 { background: #FF1744; top: 45%; left: 8%; width: 12px; height: 12px; }
+
+    .main-container {
+      width: 100%;
+      min-height: 100%;
+      padding: 3rem 2rem 120px 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logos-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px;
+      margin-bottom: 2rem;
+      padding: 1rem 0;
+      gap: 2rem;
+    }
+
+    .logo-left, .logo-right {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .logo-left {
+      max-width: 224px;
+    }
+
+    .logo-right {
+      max-width: 200px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 900px;
+    }
+
+    .main-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #FF1744;
+      margin: 0 0 1rem 0;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #424242;
+      margin: 0;
+      font-weight: 400;
+    }
+
+    .content-card {
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 3rem;
+      width: 100%;
+      max-width: 1000px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+      position: relative;
+      border: 3px solid #F5F5F5;
+    }
+
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .domain-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .domain-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, #FF1744, #FFD600, #00BFA5);
+    }
+
+    .domain-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      border-color: #FF1744;
+    }
+
+    .domain-card.emploi { border-color: #FF1744; }
+    .domain-card.formation { border-color: #00BFA5; }
+    .domain-card.orientation { border-color: #FFD600; }
+    .domain-card.numerique { border-color: #2196F3; }
+    .domain-card.mobilite { border-color: #9C27B0; }
+    .domain-card.sante { border-color: #B2DFDB; }
+    .domain-card.logement { border-color: #FF1744; }
+    .domain-card.citoyennete { border-color: #00BFA5; }
+    .domain-card.loisirs { border-color: #00BFA5; }
+    .domain-card.finances { border-color: #FFD600; }
+
+    .domain-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .domain-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FF1744;
+      margin: 0.75rem 0;
+    }
+
+    .domain-subtitle {
+      font-size: 1rem;
+      color: #757575;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .completion-badge {
+      display: inline-block;
+      background: #00BFA5;
+      color: white;
+      padding: 0.375rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .progress-indicator {
+      background: linear-gradient(135deg, #FFD600 0%, #FFB300 100%);
+      border-radius: 20px;
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #212121;
+      font-weight: 600;
+    }
+
+    .activity-header {
+      background: linear-gradient(135deg, #FF1744 0%, #D50000 100%);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 24px;
+      margin-bottom: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .activity-header::after {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .activity-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 0.75rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .activity-objective {
+      font-size: 1.125rem;
+      opacity: 0.95;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .selection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .selection-card {
+      background: #FAFAFA;
+      border: 3px solid #E0E0E0;
+      border-radius: 20px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .selection-card:hover {
+      border-color: #00BFA5;
+      background: #F1F8F6;
+      transform: scale(1.05);
+    }
+
+    .selection-card.selected {
+      background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+      color: white;
+      border-color: #00BFA5;
+      transform: scale(1.05);
+    }
+
+    .selection-card.like {
+      background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+      color: white;
+      border-color: #00BFA5;
+    }
+
+    .selection-card.dislike {
+      background: linear-gradient(135deg, #FF4F73 0%, #D50000 100%);
+      color: white;
+      border-color: #FF4F73;
+    }
+
+    .selection-label {
+      font-size: 1.05rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .emoji-selector {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 3rem 0;
+      flex-wrap: wrap;
+    }
+
+    .emoji-option {
+      text-align: center;
+      cursor: pointer;
+      padding: 2rem;
+      border-radius: 24px;
+      transition: all 0.3s ease;
+      border: 3px solid #E0E0E0;
+      background: #FAFAFA;
+      min-width: 160px;
+    }
+
+    .emoji-option:hover {
+      background: #F1F8F6;
+      border-color: #00BFA5;
+      transform: scale(1.1);
+    }
+
+    .emoji-option.selected {
+      background: linear-gradient(135deg, #FFD600 0%, #FFB300 100%);
+      border-color: #FFD600;
+      transform: scale(1.1);
+    }
+
+    .emoji-large {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+    }
+
+    .emoji-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #212121;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .flip-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+      perspective: 1000px;
+    }
+
+    .flip-card-wrapper {
+      height: 200px;
+    }
+
+    .flip-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .flip-card.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .flip-card-front {
+      background: linear-gradient(135deg, #FAFAFA 0%, #E8E8E8 100%);
+      border: 3px solid #E0E0E0;
+    }
+
+    .flip-card-back {
+      background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+      color: white;
+      transform: rotateY(180deg);
+      border: 3px solid #00BFA5;
+    }
+
+    .flip-card-content {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .flip-card:hover .flip-card-front {
+      border-color: #00BFA5;
+      box-shadow: 0 6px 16px rgba(0, 191, 165, 0.2);
+    }
+
+    .scenarios-abc-container {
+      margin: 2rem 0;
+    }
+
+    .scenario-abc-item {
+      margin-bottom: 3rem;
+    }
+
+    .scenario-question {
+      background: linear-gradient(135deg, #F5F5F5 0%, #EEEEEE 100%);
+      padding: 1.75rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid #FF1744;
+    }
+
+    .scenario-question-text {
+      font-weight: 600;
+      font-size: 1.125rem;
+      color: #212121;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .scenario-abc-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .scenario-abc-option {
+      background: #FAFAFA;
+      border: 3px solid #E0E0E0;
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.05rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .scenario-abc-option:hover {
+      border-color: #FFD600;
+      background: #FFFEF0;
+      transform: translateX(8px);
+    }
+
+    .scenario-abc-option.selected {
+      background: linear-gradient(135deg, #FFD600 0%, #FFB300 100%);
+      border-color: #FFD600;
+      color: #212121;
+      font-weight: 600;
+    }
+
+    .scenario-feedback {
+      background: #E8F5E9;
+      border-left: 4px solid #00BFA5;
+      padding: 1.25rem;
+      border-radius: 12px;
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #1B5E20;
+      line-height: 1.5;
+    }
+
+    .scenario-option {
+      background: #FAFAFA;
+      border: 3px solid #E0E0E0;
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .scenario-option:hover {
+      border-color: #00BFA5;
+      background: #F1F8F6;
+      transform: translateX(8px);
+    }
+
+    .scenario-option.selected {
+      background: linear-gradient(135deg, #00BFA5 0%, #00897B 100%);
+      color: white;
+      border-color: #00BFA5;
+      transform: translateX(8px);
+    }
+
+    .slider-container {
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: #FAFAFA;
+      border-radius: 20px;
+    }
+
+    .slider-label {
+      font-weight: 600;
+      color: #212121;
+      margin-bottom: 1.5rem;
+      display: block;
+      font-size: 1.125rem;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .slider {
+      width: 100%;
+      height: 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #B2DFDB 0%, #00BFA5 100%);
+      outline: none;
+      margin: 1.5rem 0;
+    }
+
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #FF1744;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
+      border: 4px solid white;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #FF1744;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 23, 68, 0.3);
+      border: 4px solid white;
+    }
+
+    .slider-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: #616161;
+      font-weight: 500;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 3rem;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 1.125rem 2.5rem;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Fredoka', sans-serif;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF1744 0%, #D50000 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba(255, 23, 68, 0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(255, 23, 68, 0.4);
+    }
+
+    .btn-secondary {
+      background: #EEEEEE;
+      color: #424242;
+    }
+
+    .btn-secondary:hover {
+      background: #E0E0E0;
+      transform: translateY(-2px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .bottom-capsules {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: linear-gradient(90deg, #FFD600 0%, #00BFA5 25%, #FF1744 50%, #B2DFDB 75%, #FFD600 100%);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      overflow: hidden;
+    }
+
+    .capsule {
+      width: 60px;
+      height: 30px;
+      border-radius: 30px;
+      background: white;
+      opacity: 0.7;
+    }
+
+    .section-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #FF1744;
+      margin-bottom: 2rem;
+    }
+
+    .direction-bubbles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin: 2.5rem 0;
+    }
+
+    .direction-bubble {
+      background: #FAFAFA;
+      border: 4px solid #E0E0E0;
+      border-radius: 30px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .direction-bubble:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .direction-bubble.selected {
+      transform: scale(1.08);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .direction-icon {
+      font-size: 4.5rem;
+      margin-bottom: 1.25rem;
+      display: block;
+      filter: grayscale(0.3);
+    }
+
+    .direction-bubble.selected .direction-icon {
+      filter: grayscale(0);
+      animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .direction-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .direction-description {
+      font-size: 1rem;
+      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    .category-sorter {
+      margin: 2.5rem 0;
+    }
+
+    .category-group {
+      background: #FAFAFA;
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .category-name {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #FF1744;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .logos-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo-left, .logo-right {
+        height: 50px;
+      }
+
+      .main-title {
+        font-size: 2.5rem;
+      }
+
+      .content-card {
+        padding: 2rem;
+      }
+
+      .domain-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .emoji-selector {
+        gap: 1.5rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .direction-bubbles {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="deco-shapes">
+   <div class="deco-circle deco-circle-1"></div>
+   <div class="deco-circle deco-circle-2"></div>
+   <div class="deco-circle deco-circle-3"></div>
+   <div class="deco-puzzle puzzle-1"></div>
+   <div class="deco-puzzle puzzle-2"></div>
+   <div class="floating-dots dot-1"></div>
+   <div class="floating-dots dot-2"></div>
+   <div class="floating-dots dot-3"></div>
+   <div class="floating-dots dot-4"></div>
+  </div>
+  <div class="main-container">
+   <div class="logos-container"><img src="https://static.wixstatic.com/media/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif/v1/fill/w_224,h_60,al_c,q_80,enc_avif,quality_auto/dd5dab_47743b1c86024865ba19e623a3db327f~mv2.avif" alt="Mission Locale" class="logo-left" onerror="this.style.display='none';"> <img src="https://www.lifeskills4youth.eu/wp-content/uploads/2024/07/LS4YOU_Logo.png" alt="LS4YOU" class="logo-right" onerror="this.style.display='none';">
+   </div>
+   <header class="header">
+    <h1 class="main-title" id="mainTitle">Mini Parcours Thématiques</h1>
+    <p class="subtitle" id="subtitle">Découvre tes ressources en 3 étapes</p>
+   </header>
+   <main class="content-card">
+    <div id="contentArea"></div>
+   </main>
+  </div>
+  <div class="bottom-capsules">
+   <div class="capsule"></div>
+   <div class="capsule"></div>
+   <div class="capsule"></div>
+   <div class="capsule"></div>
+   <div class="capsule"></div>
+  </div>
+  <script>
+    const defaultConfig = {
+      main_title: "Mini Parcours Thématiques",
+      subtitle: "Découvre tes ressources en 3 étapes",
+      start_button: "Commencer",
+      next_button: "Suivant",
+      back_button: "Retour",
+      finish_button: "Terminer",
+      background_color: "#ffffff",
+      accent_red: "#FF1744",
+      accent_yellow: "#FFD600",
+      accent_turquoise: "#00BFA5",
+      text_color: "#424242",
+      font_family: "Poppins",
+      font_size: 16
+    };
+
+    const domains = [
+      {
+        id: 'emploi',
+        emoji: '💼',
+        title: 'EMPLOI',
+        subtitle: 'Chercher et travailler',
+        className: 'emploi',
+        activities: [
+          {
+            id: 'emploi_1',
+            title: 'Mes compétences cachées',
+            objective: 'Tu en as plus que tu crois',
+            type: 'flip_cards',
+            cards: [
+              { recto: '🛏️ Ranger ma chambre', verso: 'Organisation', skill: 'organisation' },
+              { recto: '🤝 Aider quelqu\'un', verso: 'Patience', skill: 'patience' },
+              { recto: '⚽ Jouer en équipe', verso: 'Coopération', skill: 'coopération' },
+              { recto: '👶 M\'occuper d\'un enfant', verso: 'Responsabilité', skill: 'responsabilité' },
+              { recto: '🍳 Faire à manger', verso: 'Autonomie', skill: 'autonomie' },
+              { recto: '📚 Devoirs faits', verso: 'Persévérance', skill: 'persévérance' },
+              { recto: '🚌 Faire un trajet seul', verso: 'Débrouillardise', skill: 'débrouillardise' },
+              { recto: '🔧 Dépanner un ami', verso: 'Entraide', skill: 'entraide' },
+              { recto: '😰 Gérer un stress', verso: 'Gestion émotions', skill: 'gestion' },
+              { recto: '🔨 Réparer un objet', verso: 'Logique', skill: 'logique' },
+              { recto: '📅 Organiser un RDV', verso: 'Planification', skill: 'planification' },
+              { recto: '🎮 Apprendre un tuto', verso: 'Adaptation', skill: 'adaptation' }
+            ]
+          },
+          {
+            id: 'emploi_2',
+            title: 'Au travail : tu réagirais comment ?',
+            objective: 'Comprendre les codes de l\'emploi',
+            type: 'scenarios_abc',
+            scenarios: [
+              {
+                situation: 'Tu arrives et ton tuteur te dit que la tâche a changé. Tu fais quoi ?',
+                options: [
+                  { label: 'A – Je me braque', feedback: 'Se braquer peut bloquer la relation. Essaie d\'écouter d\'abord.' },
+                  { label: 'B – Je demande pourquoi', feedback: 'Demander, c\'est pro. Tu montres ton intérêt.' },
+                  { label: 'C – Je m\'adapte', feedback: 'T\'adapter = compétence clé en emploi !' }
+                ]
+              },
+              {
+                situation: 'On te fait une remarque. Tu fais quoi ?',
+                options: [
+                  { label: 'A – Je pars', feedback: 'Partir bloque le maintien en emploi. La remarque peut être constructive.' },
+                  { label: 'B – Je stresse', feedback: 'C\'est normal de stresser. Respire et demande des précisions.' },
+                  { label: 'C – Je demande d\'expliquer', feedback: 'Parfait ! Demander montre ta volonté de progresser.' }
+                ]
+              },
+              {
+                situation: 'Tu ne comprends pas une consigne. Tu fais quoi ?',
+                options: [
+                  { label: 'A – Je fais semblant', feedback: 'Faire semblant peut mener à des erreurs. Ose demander !' },
+                  { label: 'B – Je laisse tomber', feedback: 'Laisser tomber empêche d\'apprendre. Demande de l\'aide.' },
+                  { label: 'C – Je demande', feedback: 'Excellent ! Demander évite les erreurs et montre ton sérieux.' }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'emploi_3',
+            title: 'Quel job je peux supporter (pour de vrai) ?',
+            objective: 'Se projeter dans un environnement réaliste',
+            type: 'sliders',
+            intro: 'Trouver un job, c\'est aussi savoir ce que TU peux supporter.',
+            sliders: [
+              { label: '⏰ Horaires', min: 'Tôt le matin', max: 'Tard le soir', icon: '���' },
+              { label: '🔊 Ambiance', min: 'Calme', max: 'Bruyant', icon: '🔊' },
+              { label: '🪑 Position', min: 'Assis', max: 'Debout', icon: '🪑' },
+              { label: '👥 Contact', min: 'Seul', max: 'En équipe', icon: '��' },
+              { label: '📋 Tâches', min: 'Simples', max: 'Variées', icon: '📋' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'formation',
+        emoji: '📚',
+        title: 'FORMATION',
+        subtitle: 'Apprendre et tenir le rythme',
+        className: 'formation',
+        activities: [
+          {
+            id: 'formation_1',
+            title: 'Comment j\'apprends le mieux ?',
+            objective: 'Tu n\'es pas nul : tu as ta manière d\'apprendre',
+            type: 'learning_styles',
+            intro: 'Pour tenir une formation, connaître ta manière d\'apprendre est essentiel.',
+            maxSelection: 2,
+            options: [
+              { icon: '👀', label: 'En regardant', description: 'Tutos, photos, schémas' },
+              { icon: '✋', label: 'En faisant', description: 'Manipuler, tester' },
+              { icon: '👂', label: 'En écoutant', description: 'Explications, audio' },
+              { icon: '❓', label: 'En demandant', description: 'Poser questions, reformuler' },
+              { icon: '🔁', label: 'En répétant', description: 'Faire plusieurs fois' },
+              { icon: '👥', label: 'En groupe', description: 'Apprendre avec d\'autres' }
+            ],
+            conclusion: 'Connaître ta manière d\'apprendre t\'aidera à tenir en formation et à mieux comprendre.'
+          },
+          {
+            id: 'formation_2',
+            title: 'Mon rythme possible',
+            objective: 'Identifier sa capacité réelle �� tenir',
+            type: 'rhythm_sliders',
+            intro: 'Pour tenir une formation, connaître ton rythme est essentiel.',
+            sliders: [
+              { label: '⏱️ Durée d\'attention', min: '15 min', max: '2h' },
+              { label: '🌅 Moment préféré', min: 'Matin', max: 'Après-midi' },
+              { label: '�� Rythme', min: 'Lent', max: 'Rapide' },
+              { label: '💪 Endurance', min: 'Je fatigue vite', max: 'Je tiens longtemps' },
+              { label: '📅 Régularité', min: 'Irrégulier', max: 'Je peux tenir 3 jours/semaine' }
+            ],
+            conclusion: 'Connaître ton rythme t\'aide à choisir une formation que tu peux tenir.'
+          },
+          {
+            id: 'formation_3',
+            title: 'L\'outil qui peut m\'aider à suivre',
+            objective: '1 stratégie simple pour éviter l\'oubli',
+            type: 'tool_selection',
+            intro: 'Pour suivre une formation, un outil simple peut changer beaucoup de choses.',
+            options: [
+              { icon: '📱', label: 'Rappel téléphone', description: 'Alarmes et notifications' },
+              { icon: '📓', label: 'Agenda papier', description: 'Noter jour par jour' },
+              { icon: '✍️', label: 'Carnet de notes', description: 'Écrire les consignes' },
+              { icon: '📸', label: 'Photo des consignes', description: 'Prendre en photo le tableau' },
+              { icon: '📋', label: 'Planning hebdo', description: 'Vue de la semaine' },
+              { icon: '📲', label: 'Application notes/tâche', description: 'To-do list numérique' }
+            ],
+            conclusion: 'Un outil simple = moins d\'oubli, moins de stress, plus de réussite en formation.'
+          }
+        ]
+      },
+      {
+        id: 'numerique',
+        emoji: '💻',
+        title: 'NUMÉRIQUE',
+        subtitle: 'Compétences digitales essentielles',
+        className: 'numerique',
+        activities: [
+          {
+            id: 'numerique_1',
+            title: 'Teste tes compétences numériques avec le parcours PIX',
+            objective: 'Évalue et certifie tes compétences numériques',
+            type: 'external_link',
+            url: 'https://app.pix.fr/campagnes/NGWQSX661',
+            buttonText: 'Accéder au parcours PIX',
+            description: 'PIX est un service public en ligne pour évaluer, développer et certifier tes compétences numériques. C\'est gratuit et reconnu par l\'État !'
+          }
+        ]
+      },
+      {
+        id: 'orientation',
+        emoji: '🧭',
+        title: 'ORIENTATION',
+        subtitle: 'Projet et idées pour la suite',
+        className: 'orientation',
+        activities: [
+          {
+            id: 'orientation_1',
+            title: 'J\'aime / j\'aime pas : ce que je ressens vraiment',
+            objective: 'Sortir du "je ne sais rien", faire ressortir des préférences concrètes',
+            type: 'drag_sort_categories',
+            intro: 'Clique sur chaque carte pour la mettre dans "J\'aime" ou "J\'aime pas"',
+            categories: {
+              people: { name: 'People', items: ['👥 Aider', '💬 Parler', '🤝 Accueillir', '👂 Écouter'] },
+              nature: { name: 'Nature/Manuel', items: ['🌱 Plantes', '�� Outils', '🔨 Bricolage', '🌳 Extérieur'] },
+              creative: { name: 'Créatif', items: ['������ Dessin', '📸 Photo', '🎵 Musique', '🍳 Cuisine'] },
+              technical: { name: 'Technique/Numérique', items: ['💻 Ordinateur', '🎬 Montage', '🔌 Câbles', '📋 Organisation'] }
+            },
+            conclusion: 'Ce que tu aimes te donne des pistes pour ton futur projet ou ta prochaine immersion.'
+          },
+          {
+            id: 'orientation_2',
+            title: 'Ce que j\'ai fait → Ce que ça peut donner',
+            objective: 'Relier expériences, loisirs ou galères à des compétences utiles',
+            type: 'flip_experiences',
+            intro: 'Tu as déjà fait plein de choses. Elles peuvent t\'ouvrir des portes.',
+            cards: [
+              { recto: '🎮 Jouer à des jeux vidéo', verso: 'Réactivité', skill: 'réactivité' },
+              { recto: '👶 S\'occuper d\'un petit frère/sœur', verso: 'Patience', skill: 'patience' },
+              { recto: '⚽ Faire du sport', verso: 'Motivation', skill: 'motivation' },
+              { recto: '📱 Utiliser TikTok/Insta', verso: 'Créativité', skill: 'créativité' },
+              { recto: '🤝 Aider un ami', verso: 'Empathie', skill: 'empathie' },
+              { recto: '🍳 Cuisiner', verso: 'Organisation', skill: 'organisation' },
+              { recto: '📦 Participer �� un déménagement', verso: 'Logistique', skill: 'logistique' },
+              { recto: '💼 Faire un stage', verso: 'Adaptabilité', skill: 'adaptabilité' },
+              { recto: '👕 Vendre sur Vinted', verso: 'Communication', skill: 'communication' },
+              { recto: '🔧 Réparer un truc', verso: 'Débrouillardise', skill: 'débrouillardise' },
+              { recto: '💬 Tenir un compte Snap', verso: 'Numérique', skill: 'numérique' },
+              { recto: '✈️ Voyager seul', verso: 'Autonomie', skill: 'autonomie' },
+              { recto: '🚶 Marcher beaucoup', verso: 'Mobilité', skill: 'mobilité' },
+              { recto: '📅 Gérer un rendez-vous', verso: 'Planification', skill: 'planification' }
+            ],
+            conclusion: 'Voir les liens entre ce que tu fais et des métiers t\'aidera à construire ton projet.'
+          },
+          {
+            id: 'orientation_3',
+            title: 'Ma direction provisoire',
+            objective: 'Fixer un cap léger, sans pression',
+            type: 'direction_bubbles',
+            intro: 'Tu n\'as pas besoin d\'un métier précis. Une DIRECTION suffit pour avancer.',
+            options: [
+              { icon: '🔨', label: 'Manuel', description: 'Outils, bricolage', color: '#FF4F73' },
+              { icon: '👥', label: 'Relationnel', description: 'Aide, accueil, santé', color: '#46D9D2' },
+              { icon: '💻', label: 'Technique', description: 'Informatique, machines', color: '#FFD75B' },
+              { icon: '🎨', label: 'Créatif', description: 'Arts, images, cuisine', color: '#FF4F73' },
+              { icon: '🌳', label: 'Extérieur/Nature', description: 'Sport, environnement', color: '#46D9D2' },
+              { icon: '📋', label: 'Organisation/Service', description: 'Logistique, vente', color: '#FFD75B' }
+            ],
+            conclusion: 'En atelier, on va transformer cette direction en pistes concrètes et testables.'
+          }
+        ]
+      },
+      {
+        id: 'etranger',
+        emoji: '✈️',
+        title: 'PARTIR À L\'ÉTRANGER',
+        subtitle: 'Mobilité internationale',
+        className: 'mobilite',
+        activities: [
+          {
+            id: 'etranger_1',
+            title: 'Auto-positionnement mobilité internationale',
+            objective: 'Évalue ton projet de mobilité à l\'étranger',
+            type: 'external_link',
+            url: 'https://mlpb-tools.github.io/AutopoMobinter/',
+            buttonText: 'Accéder à l\'auto-positionnement',
+            description: 'Un outil pour t\'aider à clarifier ton projet d\'expérience à l\'étranger et identifier tes besoins'
+          }
+        ]
+      },
+      {
+        id: 'mobilite',
+        emoji: '🚗',
+        title: 'MOBILITÉ',
+        subtitle: 'Se déplacer pour avancer',
+        className: 'mobilite',
+        activities: [
+          {
+            id: 'mobilite_1',
+            title: 'Diagnostic Mobilité 360°',
+            objective: 'Évalue ta situation de mobilité et trouve des solutions',
+            type: 'external_link',
+            url: 'https://mlpb-tools.github.io/diagmob360/',
+            buttonText: 'Accéder au diagnostic mobilité',
+            description: 'Un outil pour identifier tes besoins et solutions de mobilité : transports, permis, vélo, covoiturage...'
+          }
+        ]
+      },
+      {
+        id: 'sante',
+        emoji: '💚',
+        title: 'SANTÉ',
+        subtitle: 'Bien-être physique & mental',
+        className: 'sante',
+        activities: [
+          {
+            id: 'sante_1',
+            title: 'Mes signaux d\'alerte',
+            objective: 'Comment je sais que ça ne va plus',
+            type: 'signal_selector',
+            intro: 'Chaque personne a des signaux qui montrent que ça déborde. Découvre les tiens.',
+            maxSelection: 3,
+            signals: [
+              { icon: '😴', label: 'Fatigue intense', description: 'Je suis épuisé(e)' },
+              { icon: '🤕', label: 'Maux de ventre / tête', description: 'Douleurs physiques' },
+              { icon: '🌙', label: 'Sommeil cassé', description: 'Je dors mal' },
+              { icon: '😤', label: 'Irritabilité', description: 'Tout m\'énerve' },
+              { icon: '💔', label: 'Stress dans la poitrine', description: 'Oppression' },
+              { icon: '🛌', label: 'Difficulté à me lever', description: 'Pas d\'énergie' },
+              { icon: '🚪', label: 'Isolement / envie de fuir', description: 'Je m\'éloigne' },
+              { icon: '😡', label: 'Colère rapide', description: 'J\'explose vite' },
+              { icon: '🧊', label: 'Blocage / freeze', description: 'Je ne peux plus bouger' },
+              { icon: '😢', label: 'Pleurs fréquents', description: 'Émotions débordantes' },
+              { icon: '🌀', label: 'Difficulté à me concentrer', description: 'Tête dans le brouillard' },
+              { icon: '⬇️', label: 'Perte de motivation totale', description: 'Plus rien ne me parle' }
+            ],
+            conclusion: 'Ces signaux te préviennent AVANT que ça déborde.',
+            insertion_message: 'Repérer tes signaux te permettra d\'éviter les ruptures de parcours (emploi, formation, rdv).'
+          },
+          {
+            id: 'sante_2',
+            title: 'Ce qui m\'apaise',
+            objective: 'Identifier ce qui fonctionne vraiment pour moi',
+            type: 'apaisement_selector',
+            intro: 'Chaque personne a des choses qui l\'apaisent. Découvre les tiennes.',
+            strategies: [
+              { icon: '🚶', label: 'Marcher 10 minutes', description: 'Bouger un peu' },
+              { icon: '🎵', label: 'Musique favorite', description: 'Sons qui font du bien' },
+              { icon: '🤫', label: 'Temps calme seul', description: 'M\'isoler positivement' },
+              { icon: '💬', label: 'Parler à quelqu\'un', description: 'Dire ce que je ressens' },
+              { icon: '🌳', label: 'Aller dehors', description: 'Changer d\'air' },
+              { icon: '🫁', label: 'Respiration courte', description: '3 grandes respirations' },
+              { icon: '💧', label: 'Boire un verre d\'eau', description: 'Réhydrater' },
+              { icon: '✨', label: 'Ranger un peu', description: 'Mettre de l\'ordre' },
+              { icon: '🎮', label: 'Détourner l\'attention', description: 'Jeu, vidéo courte' },
+              { icon: '🤸', label: 'M\'étirer', description: 'Relâcher les tensions' },
+              { icon: '🚿', label: 'Me doucher', description: 'Sensation apaisante' },
+              { icon: '🔇', label: 'Sortir du bruit', description: 'Trouver le calme' }
+            ],
+            conclusion: 'Avoir 1 ou 2 façons de te calmer t\'aide à rester stable dans un travail ou une formation.'
+          },
+          {
+            id: 'sante_3',
+            title: 'À qui je peux demander de l\'aide ?',
+            objective: 'Identifier un adulte ressource fiable',
+            type: 'help_resources',
+            intro: 'Personne ne doit gérer seul quand ça déborde. Qui peut t\'aider ?',
+            maxSelection: 3,
+            resources: [
+              { icon: '👥', label: 'Un ami', description: 'Quelqu\'un de mon âge' },
+              { icon: '👨‍👩‍👧', label: 'Un membre de ma famille', description: 'Parent, frère, sœur' },
+              { icon: '👔', label: 'Un conseiller ML', description: 'Mission Locale' },
+              { icon: '🩺', label: 'Un éduc / psy / infirmier', description: 'Pro de santé' },
+              { icon: '📚', label: 'Un prof / formateur', description: 'Référent formation' },
+              { icon: '💼', label: 'Un collègue / tuteur', description: 'Au travail' },
+              { icon: '❤️', label: 'Une personne de confiance', description: 'Quelqu\'un qui me comprend' },
+              { icon: '🏥', label: 'Un lieu ressource', description: 'Maison Santé, Point Accueil' }
+            ],
+            question: 'La personne à qui je peux parler en premier :',
+            conclusion: 'Avoir une personne ressource, c\'est éviter que tout s\'arrête d\'un coup (formation, emploi, projet).'
+          }
+        ]
+      },
+      {
+        id: 'logement',
+        emoji: '🏠',
+        title: 'LOGEMENT',
+        subtitle: 'Lieu de vie & sécurité personnelle',
+        className: 'logement',
+        activities: [
+          {
+            id: 'logement_1',
+            title: 'Où j\'habite vraiment ?',
+            objective: 'Sans jugement',
+            type: 'housing_situation',
+            intro: 'Ta situation, quelle qu\'elle soit, mérite d\'être entendue sans jugement.',
+            situations: [
+              { icon: '👨‍👩‍👧', label: 'Chez mes parents', description: 'Avec ma famille' },
+              { icon: '🤝', label: 'Hébergé chez un ami', description: 'Temporairement' },
+              { icon: '👪', label: 'Chez un membre de ma famille', description: 'Autre que parents' },
+              { icon: '💑', label: 'En couple', description: 'Chez mon/ma partenaire' },
+              { icon: '🏢', label: 'En chambre / foyer / résidence', description: 'Logement accompagné' },
+              { icon: '🔄', label: 'Alternance de lieux', description: 'Je bouge souvent' },
+              { icon: '🛋️', label: 'Hébergement précaire', description: 'Canapé, voiture...' },
+              { icon: '🤐', label: 'Situation instable / je préfère ne pas dire', description: 'C\'est compliqué' }
+            ],
+            question: 'Ma situation aujourd\'hui, c\'est surtout :',
+            conclusion: 'Dire ta situation permet d\'avancer vers un lieu de vie plus stable et adapté à tes besoins.',
+            insertion_message: 'Dire ta situation permet d\'avancer vers un lieu de vie plus stable et adapté à tes besoins.'
+          },
+          {
+            id: 'logement_2',
+            title: 'Ce qui me fait me sentir en sécurité',
+            objective: 'Identifier mes besoins essentiels',
+            type: 'security_needs',
+            intro: 'Un logement, ce n\'est pas juste un toit. C\'est ce qui TE fait te sentir en sécurité.',
+            needs: [
+              { icon: '🔇', label: 'Calme', description: 'Pas de bruit constant' },
+              { icon: '🚪', label: 'Intimité', description: 'Mon espace à moi' },
+              { icon: '📦', label: 'Espace pour moi', description: 'De la place' },
+              { icon: '💡', label: 'Lumière', description: 'Espace lumineux' },
+              { icon: '✨', label: 'Propreté', description: 'Lieu propre' },
+              { icon: '😌', label: 'Pas de tension', description: 'Ambiance sereine' },
+              { icon: '🛡️', label: 'Pas de violence', description: 'Sécurité physique' },
+              { icon: '📋', label: 'Règles claires', description: 'Je sais à quoi m\'attendre' },
+              { icon: '⚓', label: 'Stabilité', description: 'Durée prévisible' },
+              { icon: '👥', label: 'Pouvoir inviter quelqu\'un', description: 'Recevoir des amis' },
+              { icon: '🧘', label: 'Pouvoir m\'isoler', description: 'Me retirer quand j\'en ai besoin' },
+              { icon: '🎒', label: 'Avoir mes affaires à moi', description: 'Mes objets personnels' }
+            ],
+            question: 'Pour moi, la sécurité, c\'est surtout :',
+            conclusion: 'Connaître ce dont tu as besoin t\'aide à trouver un logement qui te respecte et te correspond.'
+          },
+          {
+            id: 'logement_3',
+            title: 'Un premier pas logement',
+            objective: 'Débloquer le passage à l\'action',
+            type: 'first_step_housing',
+            intro: 'Tu n\'as pas besoin de tout régler. Un petit pas suffit pour avancer.',
+            steps: [
+              { icon: '💬', label: 'Demander une info logement', description: 'Poser une question simple' },
+              { icon: '📍', label: 'Identifier un lieu ressource', description: 'CCAS, foyer, Résidence Jeunes' },
+              { icon: '🗣️', label: 'Parler de ma situation à un conseiller ML', description: 'Dire où j\'en suis' },
+              { icon: '💰', label: 'Voir les aides possibles', description: 'APL, FSL, garanties' },
+              { icon: '��', label: 'Regarder une annonce pour comprendre', description: 'Comment ça marche' },
+              { icon: '❓', label: 'Préparer une question logement', description: 'Clarifier ce que je ne comprends pas' }
+            ],
+            question: 'Le petit pas que je choisis :',
+            conclusion: 'Un petit pas peut éviter une rupture, te protéger et t\'aider à avancer vers un logement plus stable.'
+          }
+        ]
+      },
+      {
+        id: 'citoyennete',
+        emoji: '🤝',
+        title: 'CITOYENNETÉ',
+        subtitle: 'Droits & participation',
+        className: 'citoyennete',
+        activities: [
+          {
+            id: 'citoyennete_1',
+            title: 'Ma place en groupe',
+            objective: 'Sans pression',
+            type: 'group_position_sliders',
+            intro: 'Aider à identifier comment tu vis les interactions sans te dévaloriser.',
+            mainSlider: { 
+              label: '�� En groupe, je...', 
+              min: 'J\'ose pas trop parler', 
+              max: 'Je parle facilement',
+              emojis: ['🤐', '😶', '🤔', '💬', '🗣️']
+            },
+            additionalSliders: [
+              { label: '👥 Je préfère être...', min: 'En petit groupe', max: 'En grand groupe' },
+              { label: '🎭 Je suis à l\'aise avec...', min: 'Écouter', max: 'Parler' }
+            ],
+            question: 'En groupe, j\'ai surtout besoin de :',
+            conclusion: 'Connaître ta place en groupe facilite les ateliers, les formations et les jobs d\'équipe.'
+          },
+          {
+            id: 'citoyennete_2',
+            title: 'Gérer un désaccord simple',
+            objective: 'Régulation - éviter fuite ou explosion',
+            type: 'disagreement_scenarios',
+            intro: 'Un désaccord, ce n\'est pas un conflit. C\'est normal. Tu ferais quoi ?',
+            scenarios: [
+              {
+                situation: 'Quelqu\'un te coupe la parole.',
+                options: [
+                  { label: 'A – Je me tais et je laisse tomber', feedback: 'Se taire = tu ne te fais pas entendre. Tu as le droit d\'exprimer ton point de vue.' },
+                  { label: 'B – Je m\'énerve et je hausse le ton', feedback: 'S\'énerver = ça complique souvent la situation. Respire et reformule calmement.' },
+                  { label: 'C – Je dis calmement "Excuse-moi, je n\'avais pas fini"', feedback: 'Dire calmement = tu te respectes et tu poses tes limites. C\'est assertif et efficace !' }
+                ]
+              },
+              {
+                situation: 'Un proche te demande un service que tu ne peux pas faire.',
+                options: [
+                  { label: 'A – J\'accepte même si je ne peux pas', feedback: 'Accepter par obligation crée du stress et de la frustration. Tu as le droit de dire non.' },
+                  { label: 'B – Je refuse sèchement sans expliquer', feedback: 'Refuser brutalement peut blesser. Explique ton refus avec respect pour préserver la relation.' },
+                  { label: 'C – Je dis "Je ne peux pas cette fois, désolé(e)"', feedback: 'Parfait ! Tu poses une limite claire tout en restant respectueux. C\'est de l\'assertivité.' }
+                ]
+              },
+              {
+                situation: 'Un camarade se trompe à propos de toi.',
+                options: [
+                  { label: 'A – Je laisse faire, c\'est pas grave', feedback: 'Laisser passer peut créer des malentendus durables. Tu peux rectifier gentiment.' },
+                  { label: 'B – Je réagis fort pour me défendre', feedback: 'Réagir fort peut aggraver les tensions. Une correction calme est plus efficace.' },
+                  { label: 'C – Je dis "En fait, c\'est pas ça, je t\'explique"', feedback: 'Excellent ! Tu corriges l\'erreur sans agressivité. C\'est une communication saine.' }
+                ]
+              }
+            ],
+            conclusion: 'Savoir gérer un désaccord aide dans les stages, les formations et les emplois.'
+          },
+          {
+            id: 'citoyennete_3',
+            title: 'Un droit que j\'ai peut-être',
+            objective: 'Empowerment - développer la légitimité',
+            type: 'rights_flip_cards',
+            intro: 'Tu as des droits, même si personne ne te l\'a expliqué clairement.',
+            cards: [
+              { 
+                icon: '🏥', 
+                recto: 'Droit à la santé', 
+                verso: 'Accès psy, médecin, soin sans jugement. La santé mentale et physique est un droit, pas un luxe.',
+                right: 'santé'
+              },
+              { 
+                icon: '🏠', 
+                recto: 'Droit au logement', 
+                verso: 'Aides, accompagnement, priorité jeune. Tu as droit à un logement digne et stable.',
+                right: 'logement'
+              },
+              { 
+                icon: '💼', 
+                recto: 'Droit au travail', 
+                verso: 'Contrat, horaires, respect. Tout travail mérite un contrat et des conditions dignes.',
+                right: 'travail'
+              },
+              { 
+                icon: '���', 
+                recto: 'Droit à la formation', 
+                verso: 'Rémunération, protection. Se former est un droit, avec accompagnement et soutien financier.',
+                right: 'formation'
+              },
+              { 
+                icon: '⚖️', 
+                recto: 'Droit à la non-discrimination', 
+                verso: 'Recours, accompagnement. Personne n\'a le droit de te discriminer (origine, genre, handicap, etc.).',
+                right: 'non-discrimination'
+              },
+              { 
+                icon: '��', 
+                recto: 'Droit au revenu', 
+                verso: 'Aides CAF, RSA jeune sous conditions. Tu peux avoir droit à des aides pour vivre dignement.',
+                right: 'revenu'
+              },
+              { 
+                icon: '🛡️', 
+                recto: 'Droit à la protection', 
+                verso: 'Violence / harcèlement : lieux ressource. Tu as droit à la sécurité et à l\'aide en cas de danger.',
+                right: 'protection'
+              },
+              { 
+                icon: '📢', 
+                recto: 'Droit à l\'information', 
+                verso: 'ML, structures jeunesse. Tu as le droit de savoir ce qui existe pour toi et d\'être accompagné.',
+                right: 'information'
+              }
+            ],
+            question: 'Quel droit te semble important pour toi en ce moment ?',
+            actionQuestion: 'Je pourrais demander plus d\'infos sur :',
+            conclusion: 'Connaître tes droits t\'aide �� te protéger, avancer et éviter les ruptures.'
+          }
+        ]
+      },
+      {
+        id: 'loisirs',
+        emoji: '🎨',
+        title: 'LOISIRS',
+        subtitle: 'Activités ressources & énergie',
+        className: 'loisirs',
+        activities: [
+          {
+            id: 'loisirs_1',
+            title: 'Ce qui me fait du bien',
+            objective: 'Même si c\'est simple',
+            type: 'wellbeing_moodboard',
+            intro: 'Tu ne fais pas "rien". Tu fais plein de choses qui te font du bien.',
+            maxSelection: 6,
+            activities: [
+              { icon: '🎵', label: 'Musique', description: 'Écouter, créer' },
+              { icon: '🎨', label: 'Dessin', description: 'Dessiner, colorier' },
+              { icon: '🍳', label: 'Cuisine', description: 'Préparer à manger' },
+              { icon: '🎮', label: 'Jeu vidéo', description: 'Jouer solo ou en ligne' },
+              { icon: '🌲', label: 'Marche / forêt', description: 'Balade nature' },
+              { icon: '⚽', label: 'Sport', description: 'Bouger, se dépenser' },
+              { icon: '💃', label: 'Danse', description: 'Danser seul ou en groupe' },
+              { icon: '📺', label: 'Séries', description: 'Regarder des séries' },
+              { icon: '📸', label: 'Photo', description: 'Prendre des photos' },
+              { icon: '🛹', label: 'Skate', description: 'Skate, trottinette' },
+              { icon: '🐕', label: 'Animaux', description: 'M\'occuper d\'animaux' },
+              { icon: '��', label: 'Nature', description: 'Être dehors' },
+              { icon: '📚', label: 'Lecture', description: 'Lire, BD, mangas' },
+              { icon: '😴', label: 'Dormir', description: 'Me reposer' },
+              { icon: '🧘', label: 'Méditation simple', description: 'Respirer, me poser' },
+              { icon: '🤫', label: 'Temps seul', description: 'Moment à moi' },
+              { icon: '☕', label: 'Café avec quelqu\'un', description: 'Voir des gens' },
+              { icon: '🔧', label: 'Bricolage', description: 'Réparer, créer' },
+              { icon: '🧵', label: 'Couture / créa', description: 'Activité manuelle' },
+              { icon: '��', label: 'Jouer d\'un instrument', description: 'Musique active' }
+            ],
+            question: 'Ce qui m\'aide le plus quand je suis mal :',
+            conclusion: 'Connaître ce qui te fait du bien t\'aide à garder de l\'énergie pour ton projet.'
+          },
+          {
+            id: 'loisirs_2',
+            title: 'Les compétences derrière mes loisirs',
+            objective: 'Tu vas le voir',
+            type: 'hobby_skills_flip',
+            intro: 'Tes loisirs développent des compétences. Tu vas le voir.',
+            cards: [
+              { recto: '🎮 Jeu vidéo', verso: 'Prise de décision / Patience', skill: 'décision' },
+              { recto: '⚽ Sport', verso: 'Régularité / Effort', skill: 'régularité' },
+              { recto: '🍳 Cuisine', verso: 'Organisation', skill: 'organisation' },
+              { recto: '💃 Danse', verso: 'Coordination / Confiance', skill: 'coordination' },
+              { recto: '🎨 Dessin', verso: 'Créativité / Concentration', skill: 'créativité' },
+              { recto: '📸 Photo', verso: 'Regard / Précision', skill: 'regard' },
+              { recto: '🌲 Marche', verso: 'Gestion du stress', skill: 'stress' },
+              { recto: '📺 Séries', verso: 'Imagination / Analyse', skill: 'imagination' },
+              { recto: '🐕 Animaux', verso: 'Responsabilité', skill: 'responsabilité' },
+              { recto: '���� Bricolage', verso: 'Logique / Autonomie', skill: 'logique' },
+              { recto: '🧵 Couture / créa', verso: 'Précision / Persévérance', skill: 'précision' },
+              { recto: '🎸 Musique', verso: 'Régularité / Expression', skill: 'expression' }
+            ],
+            question: 'Quelle compétence te surprend ? Pourquoi ?',
+            conclusion: 'Tes loisirs peuvent devenir des arguments pour un CV, un entretien, ou une formation.'
+          },
+          {
+            id: 'loisirs_3',
+            title: 'Une activité accessible pour moi',
+            objective: 'Faisable et gratuite ou peu coûteuse',
+            type: 'accessible_activity',
+            intro: 'Faire une activité, ça ne doit pas coûter cher. Tu choisis celle qui est possible pour toi.',
+            activities: [
+              { icon: '📚', label: 'Bibliothèque gratuite', description: 'Livres, BD, internet gratuit' },
+              { icon: '🏃', label: 'Sport extérieur', description: 'Parc, plage, course' },
+              { icon: '🎯', label: 'Atelier gratuit Mission Locale', description: 'Ateliers et animations' },
+              { icon: '��', label: 'Balade nature', description: 'Sentiers, forêts' },
+              { icon: '🏛️', label: 'Visite culturelle gratuite', description: 'Musées, patrimoine' },
+              { icon: '✂️', label: 'Atelier créatif maison', description: 'Récup, DIY' },
+              { icon: '🎵', label: 'Écouter playlist / créer playlist', description: 'Musique gratuite' },
+              { icon: '📱', label: 'Photographie smartphone', description: 'Prendre des photos' },
+              { icon: '🥾', label: 'Rando légère / bord de mer', description: 'Marche accessible' },
+              { icon: '🎲', label: 'Jeux de société avec amis / famille', description: 'Moments conviviaux' }
+            ],
+            question: 'L\'activité que je peux faire cette semaine :',
+            conclusion: 'Une activité qui te fait du bien = plus d\'énergie pour ton projet (emploi, formation, orientation).'
+          }
+        ]
+      },
+      {
+        id: 'finances',
+        emoji: '💰',
+        title: 'FINANCES',
+        subtitle: 'Argent & budget',
+        className: 'finances',
+        activities: [
+          {
+            id: 'finances_0',
+            title: 'Calcul4U - Mon budget simplifié',
+            objective: 'Gère ton budget facilement avec un outil adapté aux jeunes',
+            type: 'external_link',
+            url: 'https://mlpb-tools.github.io/Calcul4U/',
+            buttonText: 'Accéder à l\'outil budget',
+            description: 'Un calculateur de budget simple et pratique pour gérer tes revenus et dépenses au quotidien'
+          },
+          {
+            id: 'finances_1',
+            title: 'Mes 3 dépenses du mois',
+            objective: 'Juste pour voir',
+            type: 'expense_selector',
+            intro: 'Pas de jugement, juste pour voir où part ton argent.',
+            maxSelection: 3,
+            expenses: [
+              { icon: '🛒', label: 'Courses / nourriture', description: 'Alimentation quotidienne' },
+              { icon: '📱', label: 'Téléphone / forfait', description: 'Abonnement mobile' },
+              { icon: '��', label: 'Abonnements', description: 'Netflix, Spotify...' },
+              { icon: '👕', label: 'Vêtements', description: 'Fringues, chaussures' },
+              { icon: '🚌', label: 'Transport / essence', description: 'Bus, train, voiture' },
+              { icon: '🚬', label: 'Cigarettes', description: 'Tabac' },
+              { icon: '🎉', label: 'Loisirs / sorties', description: 'Restos, cinéma, soirées' },
+              { icon: '��', label: 'Imprévus', description: 'Trucs qui arrivent' },
+              { icon: '🏠', label: 'Loyer / participation', description: 'Logement' },
+              { icon: '🐕', label: 'Animaux', description: 'Nourriture, véto' },
+              { icon: '🎮', label: 'Jeux / achats en ligne', description: 'Gaming, shopping web' },
+              { icon: '💊', label: 'Soins / pharmacie', description: 'Santé, médicaments' }
+            ],
+            question: 'Ce qui me coûte le plus, c\'est :',
+            conclusion: 'Identifier tes dépenses t\'aide à mieux gérer ton mois et avancer vers ton projet (permis, logement, formation).'
+          },
+          {
+            id: 'finances_2',
+            title: 'Ça rentre / ça sort',
+            objective: 'Comprendre les flux',
+            type: 'income_expense_sort',
+            intro: 'L\'argent, c\'est juste des entrées et des sorties. Rien de compliqué.',
+            items: [
+              { label: 'Salaire / petit boulot', category: 'income' },
+              { label: 'Aide familiale', category: 'income' },
+              { label: 'Aide CAF', category: 'income' },
+              { label: 'Aide formation', category: 'income' },
+              { label: 'Ventes (Vinted…)', category: 'income' },
+              { label: 'Loyer', category: 'expense' },
+              { label: 'Courses', category: 'expense' },
+              { label: 'Transport', category: 'expense' },
+              { label: 'Téléphone', category: 'expense' },
+              { label: 'Sorties', category: 'expense' },
+              { label: 'Imprévus', category: 'expense' },
+              { label: 'Santé', category: 'expense' },
+              { label: 'Abonnements', category: 'expense' },
+              { label: 'Achats compulsifs', category: 'expense' }
+            ],
+            question: 'J\'ai plus souvent des soucis avec :',
+            options: ['Ce qui rentre', 'Ce qui sort', 'Les deux'],
+            conclusion: 'Comprendre tes flux aide à éviter les dettes et à garder un budget stable pour travailler ou te former.'
+          },
+          {
+            id: 'finances_3',
+            title: 'Un choix important',
+            objective: 'Priorisation alignée projet',
+            type: 'budget_choices',
+            intro: 'Parfois, on ne peut pas tout faire. Il faut choisir ce qui t\'aide vraiment.',
+            choices: [
+              {
+                situation: 'Tu as un peu d\'argent de côté. Tu choisis :',
+                optionA: { icon: '📱', label: 'Nouveau téléphone', description: 'Envie immédiate' },
+                optionB: { icon: '🚗', label: 'Permis de conduire', description: 'Aide pour l\'emploi' }
+              },
+              {
+                situation: 'Ce mois-ci, tu dois arbitrer entre :',
+                optionA: { icon: '🎉', label: 'Sorties / loisirs', description: 'Profiter maintenant' },
+                optionB: { icon: '💰', label: 'Mettre un peu d\'argent de côté', description: 'Sécurité future' }
+              },
+              {
+                situation: 'Tu as besoin de choisir :',
+                optionA: { icon: '👕', label: 'Vêtements / achats', description: 'Plaisir immédiat' },
+                optionB: { icon: '🚌', label: 'Transport (bus, essence)', description: 'Nécessaire pour bouger' }
+              }
+            ],
+            question: 'Le choix qui m\'aiderait vraiment maintenant :',
+            conclusion: 'Faire un choix aligné sur ton projet t\'aide à avancer plus vite (emploi, permis, logement…).'
+          }
+        ]
+      }
+    ];
+
+    let currentDomain = null;
+    let currentActivityIndex = 0;
+    let userResponses = [];
+    let isLoading = true;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        userResponses = data;
+        if (!isLoading) {
+          renderCurrentView();
+        }
+      }
+    };
+
+    async function init() {
+      const initResult = await window.dataSdk.init(dataHandler);
+      if (!initResult.isOk) {
+        console.error("Failed to initialize data SDK");
+        return;
+      }
+      
+      isLoading = false;
+      renderDomainSelection();
+    }
+
+    function renderDomainSelection() {
+      const contentArea = document.getElementById('contentArea');
+      const completedDomains = getCompletedDomains();
+      
+      contentArea.innerHTML = `
+        <h2 class="section-title">Choisis un domaine</h2>
+        <div class="domain-grid">
+          ${domains.map(domain => `
+            <div class="domain-card ${domain.className}" onclick="selectDomain('${domain.id}')">
+              <span class="domain-emoji">${domain.emoji}</span>
+              <h3 class="domain-title">${domain.title}</h3>
+              <p class="domain-subtitle">${domain.subtitle}</p>
+              ${completedDomains.includes(domain.id) ? '<span class="completion-badge">✓ Terminé</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function getCompletedDomains() {
+      const completed = [];
+      domains.forEach(domain => {
+        const domainResponses = userResponses.filter(r => r.domain_id === domain.id);
+        if (domainResponses.length === domain.activities.length) {
+          completed.push(domain.id);
+        }
+      });
+      return completed;
+    }
+
+    function selectDomain(domainId) {
+      currentDomain = domains.find(d => d.id === domainId);
+      currentActivityIndex = 0;
+      renderActivity();
+    }
+
+    function renderActivity() {
+      if (!currentDomain) return;
+      
+      const activity = currentDomain.activities[currentActivityIndex];
+      const contentArea = document.getElementById('contentArea');
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activity.id
+      );
+      
+      let activityContent = '';
+      
+      switch (activity.type) {
+        case 'cards':
+          activityContent = renderCardsActivity(activity, existingResponse);
+          break;
+        case 'flip_cards':
+          activityContent = renderFlipCardsActivity(activity, existingResponse);
+          break;
+        case 'emoji':
+          activityContent = renderEmojiActivity(activity, existingResponse);
+          break;
+        case 'scenarios':
+          activityContent = renderScenariosActivity(activity, existingResponse);
+          break;
+        case 'scenarios_abc':
+          activityContent = renderScenariosAbcActivity(activity, existingResponse);
+          break;
+        case 'sliders':
+          activityContent = renderSlidersActivity(activity, existingResponse);
+          break;
+        case 'slider':
+          activityContent = renderSliderActivity(activity, existingResponse);
+          break;
+        case 'learning_styles':
+          activityContent = renderLearningStylesActivity(activity, existingResponse);
+          break;
+        case 'rhythm_sliders':
+          activityContent = renderRhythmSlidersActivity(activity, existingResponse);
+          break;
+        case 'tool_selection':
+          activityContent = renderToolSelectionActivity(activity, existingResponse);
+          break;
+        case 'drag_sort_categories':
+          activityContent = renderDragSortCategoriesActivity(activity, existingResponse);
+          break;
+        case 'flip_experiences':
+          activityContent = renderFlipExperiencesActivity(activity, existingResponse);
+          break;
+        case 'direction_bubbles':
+          activityContent = renderDirectionBubblesActivity(activity, existingResponse);
+          break;
+        case 'external_link':
+          activityContent = renderExternalLinkActivity(activity, existingResponse);
+          break;
+        case 'signal_selector':
+          activityContent = renderSignalSelectorActivity(activity, existingResponse);
+          break;
+        case 'apaisement_selector':
+          activityContent = renderApaisementSelectorActivity(activity, existingResponse);
+          break;
+        case 'help_resources':
+          activityContent = renderHelpResourcesActivity(activity, existingResponse);
+          break;
+        case 'housing_situation':
+          activityContent = renderHousingSituationActivity(activity, existingResponse);
+          break;
+        case 'security_needs':
+          activityContent = renderSecurityNeedsActivity(activity, existingResponse);
+          break;
+        case 'first_step_housing':
+          activityContent = renderFirstStepHousingActivity(activity, existingResponse);
+          break;
+        case 'group_position_sliders':
+          activityContent = renderGroupPositionSlidersActivity(activity, existingResponse);
+          break;
+        case 'disagreement_scenarios':
+          activityContent = renderDisagreementScenariosActivity(activity, existingResponse);
+          break;
+        case 'rights_flip_cards':
+          activityContent = renderRightsFlipCardsActivity(activity, existingResponse);
+          break;
+        case 'wellbeing_moodboard':
+          activityContent = renderWellbeingMoodboardActivity(activity, existingResponse);
+          break;
+        case 'hobby_skills_flip':
+          activityContent = renderHobbySkillsFlipActivity(activity, existingResponse);
+          break;
+        case 'accessible_activity':
+          activityContent = renderAccessibleActivityActivity(activity, existingResponse);
+          break;
+        case 'expense_selector':
+          activityContent = renderExpenseSelectorActivity(activity, existingResponse);
+          break;
+        case 'income_expense_sort':
+          activityContent = renderIncomeExpenseSortActivity(activity, existingResponse);
+          break;
+        case 'budget_choices':
+          activityContent = renderBudgetChoicesActivity(activity, existingResponse);
+          break;
+      }
+      
+      contentArea.innerHTML = `
+        <div class="progress-indicator">
+          <span>Étape ${currentActivityIndex + 1} sur ${currentDomain.activities.length}</span>
+          <span>${currentDomain.title}</span>
+        </div>
+        
+        <div>
+          <div class="activity-header">
+            <h2 class="activity-title">${activity.title}</h2>
+            <p class="activity-objective">🎯 ${activity.objective}</p>
+          </div>
+          
+          ${activityContent}
+          
+          <div class="button-group">
+            <button class="btn btn-secondary" onclick="goBack()" id="backButton">${defaultConfig.back_button}</button>
+            <button class="btn btn-primary" onclick="nextActivity()" id="nextButton" ${!existingResponse ? 'disabled' : ''}>
+              ${currentActivityIndex === currentDomain.activities.length - 1 ? defaultConfig.finish_button : defaultConfig.next_button}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCardsActivity(activity, existingResponse) {
+      const selectedCards = existingResponse ? existingResponse.response.split(',') : [];
+      
+      return `
+        <div class="selection-grid">
+          ${activity.options.map((option, idx) => `
+            <div class="selection-card ${selectedCards.includes(option) ? 'selected' : ''}" 
+                 onclick="toggleCard('${activity.id}', '${option}', this)">
+              <div class="selection-label">${option}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderFlipCardsActivity(activity, existingResponse) {
+      const selectedSkills = existingResponse ? existingResponse.response.split(',') : [];
+      
+      return `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2rem; text-align: center;">
+          💡 Clique sur les cartes pour découvrir tes compétences professionnelles cachées !
+        </p>
+        <div class="flip-cards-grid">
+          ${activity.cards.map((card, idx) => `
+            <div class="flip-card-wrapper">
+              <div class="flip-card ${selectedSkills.includes(card.skill) ? 'is-flipped' : ''}" 
+                   onclick="flipCard('${activity.id}', '${card.skill}', this)">
+                <div class="flip-card-front">
+                  <div class="flip-card-content">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">${card.recto.split(' ')[0]}</div>
+                    <div style="font-weight: 500; font-size: 1rem; line-height: 1.4;">${card.recto.substring(card.recto.indexOf(' ') + 1)}</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <div class="flip-card-content">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✨</div>
+                    <div style="font-weight: 700; font-size: 1.25rem; font-family: 'Fredoka', sans-serif;">${card.verso}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="background: #FFF9E6; border-left: 4px solid #FFD600; padding: 1.5rem; border-radius: 12px; margin-top: 2.5rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1.05rem;">
+            �� Ces compétences comptent vraiment pour l'emploi !
+          </p>
+        </div>
+      `;
+    }
+
+    function renderEmojiActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response : null;
+      
+      return `
+        <div class="emoji-selector">
+          ${activity.options.map(option => `
+            <div class="emoji-option ${selected === option.label ? 'selected' : ''}" 
+                 onclick="selectEmoji('${activity.id}', '${option.label}', this)">
+              <div class="emoji-large">${option.emoji}</div>
+              <div class="emoji-text">${option.label}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderScenariosActivity(activity, existingResponse) {
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      return activity.scenarios.map((scenario, idx) => `
+        <div style="margin-bottom: 2.5rem;">
+          <p style="font-weight: 600; color: #212121; margin-bottom: 1.25rem; font-size: 1.125rem;">${scenario.situation}</p>
+          ${scenario.options.map((option, optIdx) => `
+            <div class="scenario-option ${responses[idx] === option ? 'selected' : ''}"
+                 onclick="selectScenario('${activity.id}', ${idx}, '${option.replace(/'/g, "\\'")}', this)">
+              ${option}
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function renderScenariosAbcActivity(activity, existingResponse) {
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      return `
+        <div class="scenarios-abc-container">
+          ${activity.scenarios.map((scenario, idx) => `
+            <div class="scenario-abc-item">
+              <div class="scenario-question">
+                <p class="scenario-question-text">${scenario.situation}</p>
+              </div>
+              <div class="scenario-abc-options">
+                ${scenario.options.map((option, optIdx) => `
+                  <div class="scenario-abc-option ${responses[idx] === option.label ? 'selected' : ''}"
+                       onclick="selectScenarioAbc('${activity.id}', ${idx}, '${option.label.replace(/'/g, "\\'")}', '${option.feedback.replace(/'/g, "\\'")}', this)">
+                    ${option.label}
+                  </div>
+                `).join('')}
+              </div>
+              ${responses[idx] ? `
+                <div class="scenario-feedback" id="feedback-${activity.id}-${idx}">
+                  ${scenario.options.find(o => o.label === responses[idx])?.feedback || ''}
+                </div>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderSlidersActivity(activity, existingResponse) {
+      const values = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        ${activity.sliders.map((slider, idx) => `
+          <div class="slider-container">
+            <label class="slider-label">${slider.label}</label>
+            <input type="range" class="slider" min="0" max="100" value="${values[idx] || 50}"
+                   oninput="updateSlider('${activity.id}', ${idx}, this.value)">
+            <div class="slider-values">
+              <span>${slider.min}</span>
+              <span>${slider.max}</span>
+            </div>
+          </div>
+        `).join('')}
+        <div style="background: #E3F2FD; border-left: 4px solid #00BFA5; padding: 1.5rem; border-radius: 12px; margin-top: 2.5rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1.05rem;">
+            💡 Ce que tu viens de choisir t'aidera à trouver un emploi supportable, réaliste et durable.
+          </p>
+        </div>
+      `;
+    }
+
+    function renderSliderActivity(activity, existingResponse) {
+      const value = existingResponse ? existingResponse.response : '50';
+      
+      return `
+        <div class="slider-container">
+          <label class="slider-label">${activity.slider.label}</label>
+          <input type="range" class="slider" min="0" max="100" value="${value}"
+                 oninput="updateSingleSlider('${activity.id}', this.value)">
+          <div class="slider-values">
+            <span>${activity.slider.min}</span>
+            <span>${activity.slider.max}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderLearningStylesActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split(',') : [];
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+
+      const maxSelection = activity.maxSelection || 2;
+      const selectedCount = selected.length;
+      
+      return `
+        ${intro}
+        <div style="background: #FFF3E0; border-left: 4px solid #FFD600; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            💡 S���lectionne jusqu'à ${maxSelection} manières qui te correspondent le mieux
+            ${selectedCount > 0 ? ` (${selectedCount}/${maxSelection} sélectionné${selectedCount > 1 ? 's' : ''})` : ''}
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.options.map(option => `
+            <div class="selection-card ${selected.includes(option.label) ? 'selected' : ''}" 
+                 onclick="toggleLearningStyle('${activity.id}', '${option.label.replace(/'/g, "\\'")}', ${maxSelection}, this)"
+                 style="padding: 2rem; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${option.icon}</div>
+              <div style="font-weight: 700; font-size: 1.25rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${option.label}
+              </div>
+              <div style="font-size: 0.95rem; color: #616161; line-height: 1.4;">
+                ${option.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selectedCount > 0 ? `
+          <div style="background: #E8F5E9; border-left: 4px solid #00BFA5; padding: 1.5rem; border-radius: 12px; margin-top: 2.5rem;">
+            <p style="font-weight: 700; color: #1B5E20; margin: 0 0 0.75rem 0; font-size: 1.125rem; font-family: 'Fredoka', sans-serif;">
+              ✅ Ta manière d'apprendre :
+            </p>
+            <p style="color: #2E7D32; margin: 0; font-size: 1.05rem; font-weight: 500;">
+              ${selected.join(' + ')}
+            </p>
+            <p style="color: #2E7D32; margin: 0.75rem 0 0 0; font-size: 1rem;">
+              ${activity.conclusion}
+            </p>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderRhythmSlidersActivity(activity, existingResponse) {
+      const values = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        ${activity.sliders.map((slider, idx) => `
+          <div class="slider-container">
+            <label class="slider-label">${slider.label}</label>
+            <input type="range" class="slider" min="0" max="100" value="${values[idx] || 50}"
+                   oninput="updateRhythmSlider('${activity.id}', ${idx}, this.value)">
+            <div class="slider-values">
+              <span>${slider.min}</span>
+              <span>${slider.max}</span>
+            </div>
+          </div>
+        `).join('')}
+        ${Object.keys(values).length === activity.sliders.length ? `
+          <div style="background: linear-gradient(135deg, #E3F2FD 0%, #E8F5E9 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #00BFA5;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1.5rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              📊 Ton rythme réaliste aujourd'hui
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+              ${activity.sliders.map((slider, idx) => {
+                const value = parseInt(values[idx] || 50);
+                const emoji = slider.label.split(' ')[0];
+                return `
+                  <div style="background: ${value < 33 ? '#FFD75B' : value < 67 ? '#46D9D2' : '#FF4F73'}; 
+                              padding: 0.75rem 1.5rem; border-radius: 25px; color: white; font-weight: 600; font-size: 1rem; font-family: 'Fredoka', sans-serif;">
+                    ${emoji} ${value < 33 ? slider.min : value < 67 ? 'Moyen' : slider.max}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1.05rem; text-align: center;">
+                💡 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderToolSelectionActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response : null;
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div style="background: #FFF3E0; border-left: 4px solid #FFD600; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            📋 Choisis l'outil que tu penses pouvoir utiliser cette semaine
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.options.map(option => `
+            <div class="selection-card ${selected === option.label ? 'selected' : ''}" 
+                 onclick="selectTool('${activity.id}', '${option.label.replace(/'/g, "\\'")}', this)"
+                 style="padding: 2rem; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${option.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${option.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${option.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected ? `
+          <div style="background: linear-gradient(135deg, #FFD75B 0%, #FFB300 100%); padding: 2rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #FFD75B;">
+            <p style="font-weight: 700; color: #171718; margin: 0 0 0.75rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🎯 Mon engagement
+            </p>
+            <p style="color: #171718; margin: 0; font-size: 1.125rem; font-weight: 600; text-align: center;">
+              L'outil que je peux tester dès cette semaine : ${selected}
+            </p>
+            <div style="background: white; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem; text-align: center;">
+                ✨ ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderDragSortCategoriesActivity(activity, existingResponse) {
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      let likeCount = 0;
+      let topCategories = [];
+      
+      if (existingResponse) {
+        const categoryLikes = {};
+        Object.keys(activity.categories).forEach(catKey => {
+          categoryLikes[catKey] = 0;
+        });
+        
+        Object.entries(responses).forEach(([item, status]) => {
+          if (status === 'like') {
+            likeCount++;
+            Object.entries(activity.categories).forEach(([catKey, category]) => {
+              if (category.items.includes(item)) {
+                categoryLikes[catKey]++;
+              }
+            });
+          }
+        });
+        
+        topCategories = Object.entries(categoryLikes)
+          .filter(([_, count]) => count > 0)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 2)
+          .map(([catKey, _]) => activity.categories[catKey].name);
+      }
+      
+      return `
+        ${intro}
+        <div class="category-sorter">
+          ${Object.entries(activity.categories).map(([catKey, category]) => `
+            <div class="category-group">
+              <div class="category-name">${category.name}</div>
+              <div class="category-items">
+                ${category.items.map(item => {
+                  const status = responses[item] || '';
+                  return `
+                    <div class="selection-card ${status}" 
+                         onclick="toggleLikeDislike('${activity.id}', '${item.replace(/'/g, "\\'")}', this)">
+                      <div class="selection-label" style="font-size: 1.125rem;">${item}</div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${likeCount > 0 ? `
+          <div style="background: linear-gradient(135deg, #E8F5E9 0%, #FFF3E0 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #00BFA5;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              ✨ Ce qui ressort pour toi
+            </p>
+            ${topCategories.length > 0 ? `
+              <p style="color: #212121; margin: 0 0 1.5rem 0; font-size: 1.125rem; font-weight: 600; text-align: center;">
+                ${topCategories.join(' + ')}
+              </p>
+            ` : ''}
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                💡 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderFlipExperiencesActivity(activity, existingResponse) {
+      const selectedSkills = existingResponse ? existingResponse.response.split(',') : [];
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <p style="font-size: 1.05rem; color: #616161; margin-bottom: 2rem; text-align: center;">
+          💡 Clique sur les cartes pour voir ce que tes expériences peuvent t'apporter !
+        </p>
+        <div class="flip-cards-grid">
+          ${activity.cards.map((card, idx) => `
+            <div class="flip-card-wrapper">
+              <div class="flip-card ${selectedSkills.includes(card.skill) ? 'is-flipped' : ''}" 
+                   onclick="flipCard('${activity.id}', '${card.skill}', this)">
+                <div class="flip-card-front">
+                  <div class="flip-card-content">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">${card.recto.split(' ')[0]}</div>
+                    <div style="font-weight: 500; font-size: 0.95rem; line-height: 1.4;">${card.recto.substring(card.recto.indexOf(' ') + 1)}</div>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <div class="flip-card-content">
+                    <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">✨</div>
+                    <div style="font-weight: 700; font-size: 1.25rem; font-family: 'Fredoka', sans-serif;">${card.verso}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="background: #FFD75B; border-left: 4px solid #FFB300; padding: 1.5rem; border-radius: 12px; margin-top: 2.5rem;">
+          <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1.05rem;">
+            🚀 ${activity.conclusion}
+          </p>
+        </div>
+      `;
+    }
+
+    function renderDirectionBubblesActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response : null;
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.25rem; color: #212121; margin-bottom: 2.5rem; text-align: center; font-weight: 600;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div class="direction-bubbles">
+          ${activity.options.map(option => `
+            <div class="direction-bubble ${selected === option.label ? 'selected' : ''}" 
+                 style="${selected === option.label ? `background: linear-gradient(135deg, ${option.color} 0%, ${option.color}DD 100%); border-color: ${option.color};` : ''}"
+                 onclick="selectDirection('${activity.id}', '${option.label.replace(/'/g, "\\'")}', '${option.color}', this)">
+              <span class="direction-icon">${option.icon}</span>
+              <div class="direction-label">${option.label}</div>
+              <div class="direction-description">${option.description}</div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected ? `
+          <div style="background: linear-gradient(135deg, #E8F5E9 0%, #E3F2FD 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #00BFA5;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🧭 Ta direction : ${selected}
+            </p>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                💡 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderExternalLinkActivity(activity, existingResponse) {
+      const visited = existingResponse ? existingResponse.response === 'visited' : false;
+      
+      return `
+        <div style="text-align: center; padding: 2rem;">
+          ${activity.description ? `
+            <p style="font-size: 1.25rem; color: #424242; margin-bottom: 3rem; line-height: 1.6; font-weight: 500;">
+              ${activity.description}
+            </p>
+          ` : ''}
+          
+          <div style="background: linear-gradient(135deg, #46D9D2 0%, #00BFA5 100%); padding: 4rem 3rem; border-radius: 30px; margin: 2rem 0; box-shadow: 0 8px 32px rgba(70, 217, 210, 0.3);">
+            <div style="font-size: 5rem; margin-bottom: 1.5rem;">🚀</div>
+            <a href="${activity.url}" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               onclick="markExternalLinkVisited('${activity.id}')"
+               style="display: inline-block; background: white; color: #00BFA5; padding: 1.5rem 3rem; border-radius: 50px; font-size: 1.25rem; font-weight: 700; text-decoration: none; font-family: 'Fredoka', sans-serif; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15); transition: all 0.3s ease;"
+               onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0, 0, 0, 0.2)'"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(0, 0, 0, 0.15)'">
+              ${activity.buttonText}
+            </a>
+            ${visited ? `
+              <div style="margin-top: 2rem; color: white; font-weight: 600; font-size: 1.05rem;">
+                ✓ Lien déjà visité
+              </div>
+            ` : ''}
+          </div>
+          
+          <div style="background: #FFF3E0; border-left: 4px solid #FFD600; padding: 1.5rem; border-radius: 12px; margin-top: 2.5rem;">
+            <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1.05rem;">
+              💡 Le lien s'ouvrira dans un nouvel onglet. Tu pourras revenir ici ensuite !
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSignalSelectorActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split(',') : [];
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      const maxSelection = activity.maxSelection || 3;
+      const selectedCount = selected.length;
+      
+      return `
+        ${intro}
+        <div style="background: #FFE8F0; border-left: 4px solid #FF4F73; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            💡 Sélectionne jusqu'à ${maxSelection} signaux qui te parlent le plus
+            ${selectedCount > 0 ? ` (${selectedCount}/${maxSelection} sélectionné${selectedCount > 1 ? 's' : ''})` : ''}
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.signals.map(signal => `
+            <div class="selection-card ${selected.includes(signal.label) ? 'selected' : ''}" 
+                 onclick="toggleSignal('${activity.id}', '${signal.label.replace(/'/g, "\\'")}', ${maxSelection}, this)"
+                 style="padding: 2rem; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${signal.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${signal.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${signal.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selectedCount > 0 ? `
+          <div style="background: linear-gradient(135deg, #FFE8F0 0%, #FFD0E5 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #FF4F73;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🎯 Tes signaux d'alerte
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+              ${selected.map(signal => `
+                <div style="background: #FF4F73; padding: 0.75rem 1.5rem; border-radius: 25px; color: white; font-weight: 600; font-size: 1rem; font-family: 'Fredoka', sans-serif;">
+                  ${signal}
+                </div>
+              `).join('')}
+            </div>
+            <div style="background: white; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1.05rem; text-align: center;">
+                ⚠️ ${activity.conclusion}
+              </p>
+            </div>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                💼 ${activity.insertion_message}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderApaisementSelectorActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split(',') : [];
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div style="background: #E3F2FD; border-left: 4px solid #46D9D2; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            ✨ Clique sur toutes les stratégies qui t'aident vraiment
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.strategies.map(strategy => `
+            <div class="selection-card ${selected.includes(strategy.label) ? 'selected' : ''}" 
+                 onclick="toggleApaisement('${activity.id}', '${strategy.label.replace(/'/g, "\\'")}', this)"
+                 style="padding: 2rem; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${strategy.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${strategy.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${strategy.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected.length > 0 ? `
+          <div style="background: linear-gradient(135deg, #E3F2FD 0%, #B3E5FC 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2.5rem; border: 3px solid #46D9D2;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🌟 Ce qui m'apaise le plus aujourd'hui
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+              ${selected.map(strategy => `
+                <div style="background: #46D9D2; padding: 0.75rem 1.5rem; border-radius: 25px; color: white; font-weight: 600; font-size: 1rem; font-family: 'Fredoka', sans-serif;">
+                  ${strategy}
+                </div>
+              `).join('')}
+            </div>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                💼 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function renderHelpResourcesActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split('|||')[0].split(',') : [];
+      const textAnswer = existingResponse ? existingResponse.response.split('|||')[1] || '' : '';
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      const maxSelection = activity.maxSelection || 3;
+      const selectedCount = selected.filter(s => s).length;
+      
+      return `
+        ${intro}
+        <div style="background: #E8F5E9; border-left: 4px solid #00BFA5; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            ��� Sélectionne 1 à ${maxSelection} personnes ressources
+            ${selectedCount > 0 ? ` (${selectedCount}/${maxSelection} sélectionné${selectedCount > 1 ? 's' : ''})` : ''}
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.resources.map(resource => `
+            <div class="selection-card ${selected.includes(resource.label) ? 'selected' : ''}" 
+                 onclick="toggleHelpResource('${activity.id}', '${resource.label.replace(/'/g, "\\'")}', ${maxSelection}, this)"
+                 style="padding: 2rem; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${resource.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${resource.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${resource.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selectedCount > 0 ? `
+          <div style="background: #FAFAFA; border-radius: 20px; padding: 2rem; margin-top: 2.5rem; border: 3px solid #E0E0E0;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.125rem; font-family: 'Fredoka', sans-serif;">
+              ${activity.question}
+            </p>
+            <input type="text" 
+                   id="helpResourceText" 
+                   value="${textAnswer}"
+                   oninput="updateHelpResourceText('${activity.id}', this.value)"
+                   placeholder="Écris le nom de la personne..."
+                   style="width: 100%; padding: 1rem; border: 2px solid #E0E0E0; border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+          </div>
+          <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2rem; border: 3px solid #00BFA5;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🤝 Tes personnes ressources
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+              ${selected.filter(s => s).map(resource => `
+                <div style="background: #00BFA5; padding: 0.75rem 1.5rem; border-radius: 25px; color: white; font-weight: 600; font-size: 1rem; font-family: 'Fredoka', sans-serif;">
+                  ${resource}
+                </div>
+              `).join('')}
+            </div>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                ����️ ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    let pendingSave = null;
+
+    async function toggleCard(activityId, option, element) {
+      element.classList.toggle('selected');
+      
+      const allSelected = Array.from(document.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('.selection-label').textContent);
+      
+      await saveResponse(activityId, allSelected.join(','));
+    }
+
+    async function selectEmoji(activityId, label, element) {
+      document.querySelectorAll('.emoji-option').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      await saveResponse(activityId, label);
+    }
+
+    async function selectScenario(activityId, scenarioIdx, option, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.scenario-option').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      responses[scenarioIdx] = option;
+      
+      await saveResponse(activityId, JSON.stringify(responses));
+    }
+
+    async function flipCard(activityId, skill, element) {
+      element.classList.toggle('is-flipped');
+      
+      const allFlipped = Array.from(document.querySelectorAll('.flip-card.is-flipped'))
+        .map(el => el.getAttribute('onclick').match(/'([^']+)'/g)[1].replace(/'/g, ''));
+      
+      await saveResponse(activityId, allFlipped.join(','));
+    }
+
+    async function selectScenarioAbc(activityId, scenarioIdx, label, feedback, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.scenario-abc-option').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      responses[scenarioIdx] = label;
+      
+      const feedbackElement = document.getElementById(`feedback-${activityId}-${scenarioIdx}`);
+      if (feedbackElement) {
+        feedbackElement.textContent = feedback;
+      } else {
+        const scenarioItem = element.closest('.scenario-abc-item');
+        const newFeedback = document.createElement('div');
+        newFeedback.className = 'scenario-feedback';
+        newFeedback.id = `feedback-${activityId}-${scenarioIdx}`;
+        newFeedback.textContent = feedback;
+        scenarioItem.appendChild(newFeedback);
+      }
+      
+      await saveResponse(activityId, JSON.stringify(responses));
+    }
+
+    async function updateSlider(activityId, sliderIdx, value) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const values = existingResponse ? JSON.parse(existingResponse.response) : {};
+      values[sliderIdx] = value;
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, JSON.stringify(values)), 500);
+    }
+
+    async function updateSingleSlider(activityId, value) {
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, value), 500);
+    }
+
+    async function toggleLearningStyle(activityId, label, maxSelection, element) {
+      const container = element.parentElement;
+      const allSelected = Array.from(container.querySelectorAll('.selection-card.selected'));
+      
+      if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+      } else {
+        if (allSelected.length >= maxSelection) {
+          const instructionDiv = container.previousElementSibling;
+          if (instructionDiv) {
+            instructionDiv.style.background = '#FFEBEE';
+            instructionDiv.style.borderColor = '#FF1744';
+            setTimeout(() => {
+              instructionDiv.style.background = '#FFF3E0';
+              instructionDiv.style.borderColor = '#FFD600';
+            }, 1000);
+          }
+          return;
+        }
+        element.classList.add('selected');
+      }
+      
+      const selected = Array.from(container.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('div[style*="font-weight: 700"]').textContent.trim());
+      
+      await saveResponse(activityId, selected.join(','));
+    }
+
+    async function updateRhythmSlider(activityId, sliderIdx, value) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const values = existingResponse ? JSON.parse(existingResponse.response) : {};
+      values[sliderIdx] = value;
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, JSON.stringify(values)), 500);
+    }
+
+    async function selectTool(activityId, label, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.selection-card').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      await saveResponse(activityId, label);
+    }
+
+    async function toggleLikeDislike(activityId, item, element) {
+      if (element.classList.contains('like')) {
+        element.classList.remove('like');
+        element.classList.add('dislike');
+      } else if (element.classList.contains('dislike')) {
+        element.classList.remove('dislike');
+      } else {
+        element.classList.add('like');
+      }
+      
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const responses = existingResponse ? JSON.parse(existingResponse.response) : {};
+      
+      if (element.classList.contains('like')) {
+        responses[item] = 'like';
+      } else if (element.classList.contains('dislike')) {
+        responses[item] = 'dislike';
+      } else {
+        delete responses[item];
+      }
+      
+      await saveResponse(activityId, JSON.stringify(responses));
+    }
+
+    async function selectDirection(activityId, label, color, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.direction-bubble').forEach(el => {
+        el.classList.remove('selected');
+        el.style.background = '';
+        el.style.borderColor = '';
+      });
+      
+      element.classList.add('selected');
+      element.style.background = `linear-gradient(135deg, ${color} 0%, ${color}DD 100%)`;
+      element.style.borderColor = color;
+      
+      await saveResponse(activityId, label);
+    }
+
+    async function markExternalLinkVisited(activityId) {
+      await saveResponse(activityId, 'visited');
+    }
+
+    async function toggleSignal(activityId, label, maxSelection, element) {
+      const container = element.parentElement;
+      const allSelected = Array.from(container.querySelectorAll('.selection-card.selected'));
+      
+      if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+      } else {
+        if (allSelected.length >= maxSelection) {
+          const instructionDiv = container.previousElementSibling;
+          if (instructionDiv) {
+            instructionDiv.style.background = '#FFEBEE';
+            instructionDiv.style.borderColor = '#FF1744';
+            setTimeout(() => {
+              instructionDiv.style.background = '#FFE8F0';
+              instructionDiv.style.borderColor = '#FF4F73';
+            }, 1000);
+          }
+          return;
+        }
+        element.classList.add('selected');
+      }
+      
+      const selected = Array.from(container.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('div[style*="font-weight: 700"]').textContent.trim());
+      
+      await saveResponse(activityId, selected.join(','));
+    }
+
+    async function toggleApaisement(activityId, label, element) {
+      element.classList.toggle('selected');
+      
+      const container = element.parentElement;
+      const selected = Array.from(container.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('div[style*="font-weight: 700"]').textContent.trim());
+      
+      await saveResponse(activityId, selected.join(','));
+    }
+
+    async function toggleHelpResource(activityId, label, maxSelection, element) {
+      const container = element.parentElement;
+      const allSelected = Array.from(container.querySelectorAll('.selection-card.selected'));
+      
+      if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+      } else {
+        if (allSelected.length >= maxSelection) {
+          const instructionDiv = container.previousElementSibling;
+          if (instructionDiv) {
+            instructionDiv.style.background = '#FFEBEE';
+            instructionDiv.style.borderColor = '#FF1744';
+            setTimeout(() => {
+              instructionDiv.style.background = '#E8F5E9';
+              instructionDiv.style.borderColor = '#00BFA5';
+            }, 1000);
+          }
+          return;
+        }
+        element.classList.add('selected');
+      }
+      
+      const selected = Array.from(container.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('div[style*="font-weight: 700"]').textContent.trim());
+      
+      const textInput = document.getElementById('helpResourceText');
+      const textValue = textInput ? textInput.value : '';
+      
+      await saveResponse(activityId, `${selected.join(',')}|||${textValue}`);
+    }
+
+    async function updateHelpResourceText(activityId, textValue) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : '';
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, `${selected}|||${textValue}`), 500);
+    }
+
+    function renderHousingSituationActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : null;
+      const textAnswer = existingResponse ? existingResponse.response.split('|||')[1] || '' : '';
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.125rem; color: #424242; margin-bottom: 2.5rem; text-align: center; font-weight: 500;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div style="background: #E8F5E9; border-left: 4px solid #00BFA5; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            🏠 Choisis la situation qui correspond le mieux à ta réalité aujourd'hui
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.situations.map(situation => `
+            <div class="selection-card ${selected === situation.label ? 'selected' : ''}" 
+                 onclick="selectHousingSituation('${activity.id}', '${situation.label.replace(/'/g, "\\'")}', this)"
+                 style="padding: 2rem; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${situation.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${situation.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${situation.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected ? `
+          <div style="background: #FAFAFA; border-radius: 20px; padding: 2rem; margin-top: 2.5rem; border: 3px solid #E0E0E0;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.125rem; font-family: 'Fredoka', sans-serif;">
+              ${activity.question}
+            </p>
+            <input type="text" 
+                   id="housingSituationText" 
+                   value="${textAnswer}"
+                   oninput="updateHousingSituationText('${activity.id}', this.value)"
+                   placeholder="Décris ta situation en quelques mots..."
+                   style="width: 100%; padding: 1rem; border: 2px solid #E0E0E0; border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+          </div>
+          <div style="background: linear-gradient(135deg, #FFD75B 0%, #FFB300 100%); padding: 2rem; border-radius: 20px; margin-top: 2rem; border: 3px solid #FFD75B;">
+            <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1.05rem; text-align: center;">
+              🎯 ${activity.insertion_message}
+            </p>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    async function selectHousingSituation(activityId, label, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.selection-card').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const textInput = document.getElementById('housingSituationText');
+      const textValue = textInput ? textInput.value : '';
+      
+      await saveResponse(activityId, `${label}|||${textValue}`);
+    }
+
+    async function updateHousingSituationText(activityId, textValue) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : '';
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, `${selected}|||${textValue}`), 500);
+    }
+
+    function renderSecurityNeedsActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split('|||')[0].split(',') : [];
+      const textAnswer = existingResponse ? existingResponse.response.split('|||')[1] || '' : '';
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.25rem; color: #212121; margin-bottom: 2.5rem; text-align: center; font-weight: 600;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div style="background: #FFF3E0; border-left: 4px solid #FFD75B; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            ✨ Clique sur les éléments qui sont vraiment importants pour toi (4 à 6 éléments)
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.needs.map(need => `
+            <div class="selection-card ${selected.includes(need.label) ? 'selected' : ''}" 
+                 onclick="toggleSecurityNeed('${activity.id}', '${need.label.replace(/'/g, "\\'")}', this)"
+                 style="padding: 2rem; min-height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${need.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${need.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${need.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected.length > 0 ? `
+          <div style="background: #FAFAFA; border-radius: 20px; padding: 2rem; margin-top: 2.5rem; border: 3px solid #E0E0E0;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.125rem; font-family: 'Fredoka', sans-serif;">
+              ${activity.question}
+            </p>
+            <input type="text" 
+                   id="securityNeedsText" 
+                   value="${textAnswer}"
+                   oninput="updateSecurityNeedsText('${activity.id}', this.value)"
+                   placeholder="Complète avec tes mots..."
+                   style="width: 100%; padding: 1rem; border: 2px solid #E0E0E0; border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+          </div>
+          <div style="background: linear-gradient(135deg, #FFD75B 0%, #FFB300 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2rem; border: 3px solid #FFD75B;">
+            <p style="font-weight: 700; color: #171718; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🏡 Ce qui compte pour toi
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+              ${selected.filter(s => s).map(need => `
+                <div style="background: #171718; padding: 0.75rem 1.5rem; border-radius: 25px; color: #FFD75B; font-weight: 600; font-size: 1rem; font-family: 'Fredoka', sans-serif;">
+                  ${need}
+                </div>
+              `).join('')}
+            </div>
+            <div style="background: white; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem; text-align: center;">
+                💡 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    async function toggleSecurityNeed(activityId, label, element) {
+      element.classList.toggle('selected');
+      
+      const container = element.parentElement;
+      const selected = Array.from(container.querySelectorAll('.selection-card.selected'))
+        .map(el => el.querySelector('div[style*="font-weight: 700"]').textContent.trim());
+      
+      const textInput = document.getElementById('securityNeedsText');
+      const textValue = textInput ? textInput.value : '';
+      
+      await saveResponse(activityId, `${selected.join(',')}|||${textValue}`);
+    }
+
+    async function updateSecurityNeedsText(activityId, textValue) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : '';
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, `${selected}|||${textValue}`), 500);
+    }
+
+    function renderFirstStepHousingActivity(activity, existingResponse) {
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : null;
+      const textAnswer = existingResponse ? existingResponse.response.split('|||')[1] || '' : '';
+      
+      const intro = activity.intro ? `
+        <p style="font-size: 1.25rem; color: #212121; margin-bottom: 2.5rem; text-align: center; font-weight: 600;">
+          ${activity.intro}
+        </p>
+      ` : '';
+      
+      return `
+        ${intro}
+        <div style="background: #E3F2FD; border-left: 4px solid #46D9D2; padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="font-weight: 600; color: #212121; margin: 0; font-size: 1rem;">
+            🚶 Choisis un petit pas que tu te sens capable de faire cette semaine
+          </p>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+          ${activity.steps.map(step => `
+            <div class="selection-card ${selected === step.label ? 'selected' : ''}" 
+                 onclick="selectFirstStepHousing('${activity.id}', '${step.label.replace(/'/g, "\\'")}', this)"
+                 style="padding: 2rem; min-height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <div style="font-size: 3.5rem; margin-bottom: 1rem;">${step.icon}</div>
+              <div style="font-weight: 700; font-size: 1.125rem; color: #212121; margin-bottom: 0.5rem; font-family: 'Fredoka', sans-serif;">
+                ${step.label}
+              </div>
+              <div style="font-size: 0.9rem; color: #616161; line-height: 1.4;">
+                ${step.description}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${selected ? `
+          <div style="background: #FAFAFA; border-radius: 20px; padding: 2rem; margin-top: 2.5rem; border: 3px solid #E0E0E0;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.125rem; font-family: 'Fredoka', sans-serif;">
+              ${activity.question}
+            </p>
+            <input type="text" 
+                   id="firstStepHousingText" 
+                   value="${textAnswer}"
+                   oninput="updateFirstStepHousingText('${activity.id}', this.value)"
+                   placeholder="Note ton petit pas ici..."
+                   style="width: 100%; padding: 1rem; border: 2px solid #E0E0E0; border-radius: 12px; font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box;">
+          </div>
+          <div style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); padding: 2.5rem; border-radius: 20px; margin-top: 2rem; border: 3px solid #00BFA5;">
+            <p style="font-weight: 700; color: #212121; margin: 0 0 1rem 0; font-size: 1.25rem; font-family: 'Fredoka', sans-serif; text-align: center;">
+              🎯 Mon petit pas : ${selected}
+            </p>
+            <div style="background: #FFD75B; padding: 1.25rem; border-radius: 12px; margin-top: 1.5rem;">
+              <p style="font-weight: 600; color: #171718; margin: 0; font-size: 1rem; text-align: center;">
+                🎯 ${activity.conclusion}
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    async function selectFirstStepHousing(activityId, label, element) {
+      const container = element.parentElement;
+      container.querySelectorAll('.selection-card').forEach(el => el.classList.remove('selected'));
+      element.classList.add('selected');
+      
+      const textInput = document.getElementById('firstStepHousingText');
+      const textValue = textInput ? textInput.value : '';
+      
+      await saveResponse(activityId, `${label}|||${textValue}`);
+    }
+
+    async function updateFirstStepHousingText(activityId, textValue) {
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+      
+      const selected = existingResponse ? existingResponse.response.split('|||')[0] : '';
+      
+      if (pendingSave) clearTimeout(pendingSave);
+      pendingSave = setTimeout(() => saveResponse(activityId, `${selected}|||${textValue}`), 500);
+    }
+
+    function renderGroupPositionSlidersActivity(activity, existingResponse) {
+      return `<p>Activité en construction</p>`;
+    }
+
+    function renderDisagreementScenariosActivity(activity, existingResponse) {
+      return renderScenariosAbcActivity(activity, existingResponse);
+    }
+
+    function renderRightsFlipCardsActivity(activity, existingResponse) {
+      return `<p>Activité en construction</p>`;
+    }
+
+    function renderWellbeingMoodboardActivity(activity, existingResponse) {
+      return `<p>Activité en construction</p>`;
+    }
+
+    function renderHobbySkillsFlipActivity(activity, existingResponse) {
+      return renderFlipCardsActivity(activity, existingResponse);
+    }
+
+    function renderAccessibleActivityActivity(activity, existingResponse) {
+      return renderToolSelectionActivity(activity, existingResponse);
+    }
+
+    function renderExpenseSelectorActivity(activity, existingResponse) {
+      return renderSignalSelectorActivity(activity, existingResponse);
+    }
+
+    function renderIncomeExpenseSortActivity(activity, existingResponse) {
+      return `<p>Activité en construction</p>`;
+    }
+
+    function renderBudgetChoicesActivity(activity, existingResponse) {
+      return `<p>Activité en construction</p>`;
+    }
+
+    async function saveResponse(activityId, response) {
+      if (userResponses.length >= 999) {
+        alert("Limite de 999 réponses atteinte. Impossible d'ajouter de nouvelles réponses.");
+        return;
+      }
+
+      const existingResponse = userResponses.find(r => 
+        r.domain_id === currentDomain.id && r.activity_id === activityId
+      );
+
+      if (existingResponse) {
+        existingResponse.response = response;
+        const result = await window.dataSdk.update(existingResponse);
+        if (!result.isOk) {
+          console.error("Failed to update response");
+        }
+      } else {
+        const result = await window.dataSdk.create({
+          domain_id: currentDomain.id,
+          activity_id: activityId,
+          response: response,
+          completed_at: new Date().toISOString()
+        });
+        if (!result.isOk) {
+          console.error("Failed to create response");
+        }
+      }
+
+      const nextButton = document.getElementById('nextButton');
+      if (nextButton) {
+        nextButton.disabled = false;
+      }
+    }
+
+    function goBack() {
+      if (currentActivityIndex > 0) {
+        currentActivityIndex--;
+        renderActivity();
+      } else {
+        currentDomain = null;
+        renderDomainSelection();
+      }
+    }
+
+    function nextActivity() {
+      if (currentActivityIndex < currentDomain.activities.length - 1) {
+        currentActivityIndex++;
+        renderActivity();
+      } else {
+        currentDomain = null;
+        renderDomainSelection();
+      }
+    }
+
+    function renderCurrentView() {
+      if (currentDomain) {
+        renderActivity();
+      } else {
+        renderDomainSelection();
+      }
+    }
+
+    async function onConfigChange(config) {
+      document.getElementById('mainTitle').textContent = config.main_title || defaultConfig.main_title;
+      document.getElementById('subtitle').textContent = config.subtitle || defaultConfig.subtitle;
+      
+      document.body.style.background = config.background_color || defaultConfig.background_color;
+      
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(btn => {
+        if (btn.classList.contains('btn-primary')) {
+          btn.style.background = `linear-gradient(135deg, ${config.accent_red || defaultConfig.accent_red} 0%, #D50000 100%)`;
+        }
+      });
+    }
+
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                window.elementSdk.config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.accent_red || defaultConfig.accent_red,
+              set: (value) => {
+                window.elementSdk.config.accent_red = value;
+                window.elementSdk.setConfig({ accent_red: value });
+              }
+            },
+            {
+              get: () => config.accent_yellow || defaultConfig.accent_yellow,
+              set: (value) => {
+                window.elementSdk.config.accent_yellow = value;
+                window.elementSdk.setConfig({ accent_yellow: value });
+              }
+            },
+            {
+              get: () => config.accent_turquoise || defaultConfig.accent_turquoise,
+              set: (value) => {
+                window.elementSdk.config.accent_turquoise = value;
+                window.elementSdk.setConfig({ accent_turquoise: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                window.elementSdk.config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              window.elementSdk.config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              window.elementSdk.config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["main_title", config.main_title || defaultConfig.main_title],
+          ["subtitle", config.subtitle || defaultConfig.subtitle],
+          ["start_button", config.start_button || defaultConfig.start_button],
+          ["next_button", config.next_button || defaultConfig.next_button],
+          ["back_button", config.back_button || defaultConfig.back_button],
+          ["finish_button", config.finish_button || defaultConfig.finish_button]
+        ])
+      });
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a83d86f11bc02d7',t:'MTc2NDc3MzEwMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
